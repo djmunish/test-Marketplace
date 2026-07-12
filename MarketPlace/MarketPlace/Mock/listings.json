@@ -1,0 +1,74 @@
+[
+  {
+    "id": "11111111-1111-1111-1111-111111111111",
+    "title": "Gaming Laptop",
+    "price": 1500.0,
+    "updatedAt": "2026-04-10T10:00:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "synced"
+  },
+  {
+    "id": "22222222-2222-2222-2222-222222222222",
+    "title": "Wireless Headphones",
+    "price": 220.0,
+    "updatedAt": "2026-04-09T12:00:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "pending"
+  },
+  {
+    "id": "33333333-3333-3333-3333-333333333333",
+    "title": "Mechanical Keyboard",
+    "price": 85.0,
+    "updatedAt": "2026-04-08T09:00:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "synced"
+  },
+  {
+    "id": "44444444-4444-4444-4444-444444444444",
+    "title": "Vintage Camera",
+    "price": 120.5,
+    "updatedAt": "2026-04-07T14:30:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "synced"
+  },
+  {
+    "id": "55555555-5555-5555-5555-555555555555",
+    "title": "Smart Watch",
+    "price": 199.99,
+    "updatedAt": "2026-04-06T08:15:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "pending"
+  },
+  {
+    "id": "66666666-6666-6666-6666-666666666666",
+    "title": "Bluetooth Speaker",
+    "price": 60.0,
+    "updatedAt": "2026-04-05T18:45:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "synced"
+  },
+  {
+    "id": "77777777-7777-7777-7777-777777777777",
+    "title": "Office Chair",
+    "price": 180.0,
+    "updatedAt": "2026-04-04T11:20:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "pending"
+  },
+  {
+    "id": "88888888-8888-8888-8888-888888888888",
+    "title": "Desk Lamp",
+    "price": 45.0,
+    "updatedAt": "2026-04-03T16:00:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "synced"
+  },
+  {
+    "id": "99999999-9999-9999-9999-999999999999",
+    "title": "Backpack",
+    "price": 70.0,
+    "updatedAt": "2026-04-02T09:10:00Z",
+    "imagePath": "https://placebear.com/200/300",
+    "syncStatus": "synced"
+  }
+]

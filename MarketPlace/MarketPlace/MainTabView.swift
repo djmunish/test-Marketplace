@@ -1,0 +1,28 @@
+//
+//  MainTabView.swift
+//  MarketPlace
+//
+//  Created by Munish Sehdev on 2026-07-12.
+//
+
+import SwiftUI
+
+struct MainTabView: View {
+    let persistenceController = PersistenceController.shared
+
+    var body: some View {
+        TabView {
+            let viewModel = ListingViewModel()
+            ListingView(viewModel: viewModel)
+                .tabItem {
+                    Label("Listings", systemImage: "house")
+                }
+
+            let favViewModel = FavoritesViewModel()
+            FavoritesView(viewModel: favViewModel)
+                .tabItem {
+                    Label("Favorites", systemImage: "heart")
+                }
+        }
+    }
+}

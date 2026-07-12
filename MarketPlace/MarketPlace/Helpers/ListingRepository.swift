@@ -17,6 +17,9 @@ protocol ListingRepositoryProtocol {
     func isDatabaseEmpty() throws -> Bool
     func seedIfNeeded() async throws
     func seedDatabaseFromJson() async throws
+    func createListing(title: String, price: Double, image: Data) async
+    func updateListing(listing: ListingModel, title: String, price: Double, newImageData: Data?) async
+    func uploadPendingListings() async
 }
 
 class ListingRepository: ObservableObject, ListingRepositoryProtocol {
@@ -137,6 +140,92 @@ class ListingRepository: ObservableObject, ListingRepositoryProtocol {
             print("Seeding failed: \(error)")
         }
     }
+
+    // MARK: - Create Listing (Offline First)
+    func createListing(title: String, price: Double, image: Data) async {
+        await context.perform {
+            let newListing = Listing(context: self.context)
+
+            let id = UUID()
+            newListing.id = id
+            newListing.title = title
+            newListing.price = price
+            newListing.updatedAt = Date()
+            newListing.syncStatusEnum = .pending
+
+            let filename = id.uuidString + ".jpg"
+            newListing.imagePath = filename
+
+            do {
+                try ImageStore.saveImageToDisk(data: image, fileName: filename)
+            } catch {
+                print("❌ Failed to save image:", error)
+            }
+
+            self.saveContext()
+            self.refreshListings()
+        }
+    }
+
+    func updateListing(listing: ListingModel, title: String, price: Double, newImageData: Data?) async {
+
+        await context.perform {
+
+            let request: NSFetchRequest<Listing> = Listing.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", listing.id as CVarArg)
+            request.fetchLimit = 1
+
+            guard let listingToUpdate = try? self.context.fetch(request).first
+            else {
+                print("❌ Failed to find listing for update")
+                return
+            }
+
+            listingToUpdate.title = title
+            listingToUpdate.price = price
+            listingToUpdate.updatedAt = Date()
+            listingToUpdate.syncStatusEnum = .pending
+
+            if let newData = newImageData {
+                if let filename = listingToUpdate.imagePath {
+                    let oldPath = ImageStore.getURLForFilename(filename)
+                    try? FileManager.default.removeItem(at: oldPath)
+                }
+
+                let filename = UUID().uuidString + ".jpg"
+                do {
+                    try ImageStore.saveImageToDisk(data: newData, fileName: filename)
+                    listingToUpdate.imagePath = filename
+                } catch {
+                    print("❌ Failed to save image:", error)
+                }
+            }
+
+            self.saveContext()
+            self.refreshListings()
+        }
+    }
+
+    func uploadPendingListings() async {
+        let context = self.context
+
+        await context.perform {
+            let request: NSFetchRequest<Listing> = Listing.fetchRequest()
+            request.predicate = NSPredicate(format: "syncStatus == %@", SyncStatus.pending.rawValue)
+            guard let results = try? context.fetch(request) else { return }
+
+            for listing in results {
+                // Simulate API upload
+                print("Uploading:", listing.title ?? "")
+
+                listing.syncStatusEnum = .synced
+            }
+
+            self.saveContext()
+            self.refreshListings()
+        }
+    }
+
 
     private func refreshListings() {
         let request: NSFetchRequest<Listing> = Listing.fetchRequest()

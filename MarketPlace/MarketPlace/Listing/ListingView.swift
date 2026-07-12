@@ -59,6 +59,38 @@ struct ListingView: View {
                         await viewModel.loadEvents()
                     }
                 }
+            }.toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        activeSheet = .create
+                    }) {
+                        Image(systemName: "plus")
+                            .font(.headline)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        Task{
+                            await viewModel.sync()
+                        }
+                    }) {
+                        Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle")
+                            .font(.headline)
+                    }
+                }
+            }.sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                case .create:
+                    CreateListingView(
+                        repository: viewModel.repository,
+                        listing: nil
+                    )
+                case .edit(let listing):
+                    CreateListingView(
+                        repository: viewModel.repository,
+                        listing: listing
+                    )
+                }
             }
         }
     }

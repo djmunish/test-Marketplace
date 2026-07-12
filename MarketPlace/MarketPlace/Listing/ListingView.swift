@@ -40,10 +40,26 @@ struct ListingView: View {
                         systemImage: "bag",
                         description: Text("Try adding something new or check your listings.json file.")
                     )
+                } else {
+                    List(viewModel.listings, id: \.id) { item in
+                        ListingRow(listing: item, onFavoriteTapped: {
+                        }, hideSyncIndicator: false)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                activeSheet = .edit(item)
+                            }
+                    }
                 }
             }
             .navigationTitle("Marketplace")
             .navigationBarTitleDisplayMode(.large)
+            .onAppear {
+                if viewModel.listings.isEmpty {
+                    Task{
+                        await viewModel.loadEvents()
+                    }
+                }
+            }
         }
     }
 }

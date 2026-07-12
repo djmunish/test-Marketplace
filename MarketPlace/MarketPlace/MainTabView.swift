@@ -12,7 +12,10 @@ struct MainTabView: View {
 
     var body: some View {
         TabView {
-            let viewModel = ListingViewModel()
+            let repository = ListingRepository(
+                container: persistenceController.container
+            )
+            let viewModel = ListingViewModel(repository: repository)
             ListingView(viewModel: viewModel)
                 .tabItem {
                     Label("Listings", systemImage: "house")

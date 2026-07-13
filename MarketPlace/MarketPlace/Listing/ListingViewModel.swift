@@ -37,6 +37,10 @@ class ListingViewModel {
         isLoading = false
     }
     
+    func toggleFavorite(item: ListingModel) {
+        repository.toggleFavorite(item: item)
+    }
+
     func sync() async {
         await repository.uploadPendingListings()
         listings = repository.fetchAllListings()

@@ -90,9 +90,30 @@ struct CreateListingView: View {
                             Text(statusText)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
+
+                            Spacer()
+
+
+                            Button {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                                    viewModel.onFavoriteTapped()
+                                }
+                            } label: {
+                                Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                                    .foregroundColor(viewModel.isFavorite ? .red : .gray)
+                                    .font(.title3)
+                                    .contentTransition(.symbolEffect(.replace)) // iOS 17+ morph animation
+                            }
+                            .buttonStyle(.plain)
+
+//                            if viewModel.isFavorite == true {
+//                                Image(systemName: "heart.fill")
+//                                    .foregroundColor(.red)
+//                            }
                         }
                     }
                 }
+
             }
             .navigationTitle(viewModel.existingListing == nil ? "New Listing" : "Edit Listing")
             .navigationBarTitleDisplayMode(.inline)

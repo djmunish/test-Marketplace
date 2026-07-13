@@ -21,10 +21,20 @@ struct FavoritesView: View {
                         systemImage: "heart",
                         description: Text("Try adding something new to favorites.")
                     )
+                } else {
+                    List(viewModel.favoriteListings, id: \.id) { item in
+                        ListingRow(listing: item, onFavoriteTapped: {
+                            viewModel.toggleFavorite(for: item)
+                        }, hideSyncIndicator: true)
+                        .contentShape(Rectangle())
+                    }
                 }
             }
             .navigationTitle("Favourites")
             .navigationBarTitleDisplayMode(.large)
+            .onAppear {
+                viewModel.fetchFavorites()
+            }
         }
     }
 }

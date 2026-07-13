@@ -43,6 +43,7 @@ struct ListingView: View {
                 } else {
                     List(viewModel.listings, id: \.id) { item in
                         ListingRow(listing: item, onFavoriteTapped: {
+                            viewModel.toggleFavorite(item: item)
                         }, hideSyncIndicator: false)
                             .contentShape(Rectangle())
                             .onTapGesture {

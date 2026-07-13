@@ -20,6 +20,8 @@ protocol ListingRepositoryProtocol {
     func createListing(title: String, price: Double, image: Data) async
     func updateListing(listing: ListingModel, title: String, price: Double, newImageData: Data?) async
     func uploadPendingListings() async
+    func toggleFavorite(item: ListingModel)
+    func fetchFavoriteListings() -> [ListingModel]
 }
 
 class ListingRepository: ObservableObject, ListingRepositoryProtocol {
@@ -226,6 +228,57 @@ class ListingRepository: ObservableObject, ListingRepositoryProtocol {
         }
     }
 
+    func toggleFavorite(item: ListingModel) {
+        let request: NSFetchRequest<Listing> = Listing.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", item.id as CVarArg)
+        request.fetchLimit = 1
+
+        do {
+            if let listingToUpdate = try context.fetch(request).first {
+                // Toggle the boolean value
+                listingToUpdate.isFavorite.toggle()
+
+                // Save to database
+                try context.save()
+
+                // Push updated items out to the Combine stream / UI
+                refreshListings()
+            } else {
+                print("❌ Failed to find listing to favorite with ID: \(item.id)")
+            }
+        } catch {
+            print("❌ Error toggling favorite status: \(error)")
+        }
+    }
+
+    func fetchFavoriteListings() -> [ListingModel] {
+        let request: NSFetchRequest<Listing> = Listing.fetchRequest()
+
+        request.predicate = NSPredicate(format: "isFavorite == true")
+
+        request.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Listing.updatedAt, ascending: true)
+        ]
+
+        do {
+            let results = try context.fetch(request)
+
+            return results.map { entity in
+                ListingModel(
+                    id: entity.id ?? UUID(),
+                    title: entity.title ?? "",
+                    price: entity.price,
+                    imagePath: entity.imagePath,
+                    updatedAt: entity.updatedAt,
+                    syncStatusEnum: entity.syncStatusEnum,
+                    isFavorite: entity.isFavorite
+                )
+            }
+        } catch {
+            print("❌ Fetching favorites failed: \(error)")
+            return []
+        }
+    }
 
     private func refreshListings() {
         let request: NSFetchRequest<Listing> = Listing.fetchRequest()

@@ -21,7 +21,7 @@ struct MainTabView: View {
                     Label("Listings", systemImage: "house")
                 }
 
-            let favViewModel = FavoritesViewModel()
+            let favViewModel = FavoritesViewModel(repository: repository)
             FavoritesView(viewModel: favViewModel)
                 .tabItem {
                     Label("Favorites", systemImage: "heart")

@@ -21,6 +21,7 @@ class CreateListingViewModel {
     var price: String = ""
     var imageData: Data? = nil
     var syncStatus: SyncStatus = .pending
+    var isFavorite: Bool = false
 
     init(repository: ListingRepositoryProtocol,
          listing: ListingModel? = nil,
@@ -35,6 +36,7 @@ class CreateListingViewModel {
             self.title = listing.title
             self.price = String(format: "%.2f", listing.price)
             self.syncStatus = listing.syncStatusEnum
+            self.isFavorite = listing.isFavorite
         }
     }
 
@@ -72,5 +74,11 @@ class CreateListingViewModel {
                 self.imageData = data
             }
         }
+    }
+
+    func onFavoriteTapped() {
+        guard let listing = existingListing else { return }
+        repository.toggleFavorite(item: listing)
+        isFavorite.toggle()
     }
 }

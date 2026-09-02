@@ -16,6 +16,8 @@ struct MainTabView: View {
                 container: persistenceController.container
             )
             let viewModel = ListingViewModel(repository: repository)
+
+
             ListingView(viewModel: viewModel)
                 .tabItem {
                     Label("Listings", systemImage: "house")
@@ -25,6 +27,11 @@ struct MainTabView: View {
             FavoritesView(viewModel: favViewModel)
                 .tabItem {
                     Label("Favorites", systemImage: "heart")
+                }
+
+            ParentDoorConfiguratorView()
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
                 }
         }
     }
